@@ -1,0 +1,26 @@
+{
+  "name": "x-markdown",
+  "version": "0.0.1",
+  "description": "Markdown parser built on regular expressions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ismailceylan/x-markdown.git"
+  },
+  "keywords": [
+    "markdown",
+    "javascript",
+    "parser",
+    "reqular",
+    "expression"
+  ],
+  "author": "Ismail Ceylan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ismailceylan/x-markdown/issues"
+  },
+  "homepage": "https://github.com/ismailceylan/x-markdown#readme"
+}
