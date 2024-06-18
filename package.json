@@ -4,7 +4,12 @@
   "description": "Markdown parser built on regular expressions.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "release": "standard-version",
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
