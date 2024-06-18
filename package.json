@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/ismailceylan/x-markdown/issues"
   },
-  "homepage": "https://github.com/ismailceylan/x-markdown#readme"
+  "homepage": "https://github.com/ismailceylan/x-markdown#readme",
+  "dependencies": {
+    "vite": "^5.3.1"
+  }
 }
