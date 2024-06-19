@@ -1,15 +1,14 @@
 {
   "name": "x-markdown",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Markdown parser built on regular expressions.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "release": "standard-version",
-    "publish": "npm publish"
+    "publish-package": "npm publish"
   },
   "repository": {
     "type": "git",
