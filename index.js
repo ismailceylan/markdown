@@ -1,16 +1,79 @@
 import Markdown from "./src/markdown";
-import MarkdownPlugin from "./src/markdown-plugin";
+import { EOS } from "./src/constants";
 
-const md = new Markdown;
-const bold = new MarkdownPlugin( "bold" );
+const md = new Markdown(
+{
+	plugins:
+	{
+		bold:
+		[
+			{
+				mode: "match",
+				with: "**"
+			},
+			{
+				mode: "eat",
+				until: "**",
+				name: "content"
+			}
+		],
+		link:
+		[
+			{
+				mode: "match",
+				with: "["
+			},
+			{
+				mode: "eat",
+				until: "]",
+				name: "link-content"
+			},
+			{
+				mode: "match",
+				with: "("
+			},
+			{
+				mode: "eat",
+				until: ")",
+				name: "paranthesis-content",
+				useValue:
+				{
+					"link-and-title":
+					[
+						{
+							mode: "eat",
+							until: " ",
+							name: "link"
+						},
+						{
+							mode: "match",
+							with: " "
+						},
+						{
+							mode: "eat",
+							until: EOS,
+							name: "title"
+						}
+					],
 
-bold
-	.pattern( /(?:\*\*|__)(.*?)(?:\*\*|__)/g )
-	.render( value => `<b>${value}</b>` );
+					"only-link":
+					[
+						{
+							mode: "eat",
+							until: EOS,
+							name: "link",
+						}
+					]
+				}
+			}
+		]
+	}
+});
+console.time("render");
 
-md.use( bold );
+const rendered = md.render(
+`Hello **World**! [How](sasd) are **you** babe?` );
 
-console.log( 
-	md,
-	md.render( "Hello **World**" )
-);
+console.timeEnd("render");
+
+console.log(md);
