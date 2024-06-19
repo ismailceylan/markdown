@@ -1,14 +1,23 @@
 {
-  "name": "@iceylan/markdown-parser",
+  "name": "@iceylan/markdown",
   "version": "0.0.2",
+  "type": "module",
+  "files": [ "dist" ],
   "description": "Markdown parser built on abstract syntax tree.",
-  "main": "index.js",
+  "main": "./dist/my-lib.umd.cjs",
+  "module": "./dist/my-lib.js",
+  "exports": {
+    ".": {
+      "import": "./dist/my-lib.js",
+      "require": "./dist/my-lib.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "release": "standard-version",
-    "publish-package": "npm publish"
+    "publish-package": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
