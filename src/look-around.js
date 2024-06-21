@@ -1,58 +1,114 @@
+import Stream from "./stream";
+
+/**
+ * Looks around on the given stream without moving the cursor.
+ */
 export default class LookAround
 {
 	cursor = 0;
-	stream = null;
-	stack = [];
 
+	/**
+	 * The stream that this look around is based on.
+	 * 
+	 * @type {Stream}
+	 */
+	stream = null;
+
+	/**
+	 * Initializes the look around.
+	 * 
+	 * @param {Stream} stream 
+	 */
 	constructor( stream )
 	{
 		this.stream = stream;
 		this.cursor = stream.cursor;
 	}
 
-	positiveLookAhead( target )
+	/**
+	 * Indicates if the cursor is positioned after the given target.
+	 * 
+	 * ```js
+	 * //     v   <= cursor is here
+	 * "foo bar baz".before( "ba" );
+	 * // it will return true
+	 * ```
+	 * 
+	 * @param {string} target target string to look for
+	 * @param {{move?: boolean}} [options] options
+	 * @returns {boolean}
+	 */
+	before( target, { move = false } = {})
 	{
-		this.stack.push(
-			target === this.stream.raw.slice( this.cursor, this.cursor + target.length )
+		const haystack = this.stream.raw.slice
+		(
+			this.cursor - target.length,
+			this.cursor
 		);
 
-		this.cursor += target.length;
+		if( move )
+		{
+			this.cursor -= target.length;
+		}
 
-		return this;
-	}
-
-	negativeLookAhead( target )
-	{
-		this.stack.push(
-			target !== this.stream.raw.slice( this.cursor, this.cursor + target.length )
-		);
-
-		this.cursor += target.length;
-
-		return this;
-	}
-
-	negativeLookBehind( target )
-	{
-		this.stack.push(
-			target !== this.stream.raw.slice( this.cursor - target.length, this.cursor )
-		);
-
-		this.cursor -= target.length;
-
-		return this;
+		return haystack === target;
 	}
 
 	/**
-	 * Returns whether all looking around in the stack are truthy or not.
-	 *
-	 * @return {boolean}
+	 * Indicates if the cursor is positioned before the given target.
+	 * 
+	 * ```js
+	 * //   v   <= cursor is here
+	 * "foo bar baz".after( "ar" );
+	 * // it will return true
+	 * ```
+	 * 
+	 * @param {string} target target string to look for
+	 * @param {{move?: boolean}} [options] options
+	 * @returns {boolean}
 	 */
-	get passed()
+	after( target, { move = false } = {})
 	{
-		return this.stack.reduce(
-			( prev, curr ) => prev && curr,
-			true
+		const haystack = this.stream.raw.slice
+		(
+			this.cursor + 1,
+			this.cursor + 1 + target.length
 		);
+
+		if( move )
+		{
+			this.cursor += target.length;
+		}
+
+		return haystack === target;
+	}
+
+	/**
+	 * Indicates if the cursor is positioned from the given target.
+	 * 
+	 * ```js
+	 * //    v   <= cursor is here
+	 * "foo bar baz".match( "ar" );
+	 * // it will return true
+	 * ```
+	 * 
+	 * @param {string} target target string to look for
+	 * @param {{move?: boolean}} [options] options
+	 * @returns {boolean}
+	 */
+	match( target, { move = false } = {})
+	{
+		const haystack = this.stream.raw.slice
+		(
+			this.cursor,
+			this.cursor + target.length
+		);
+
+		if( move )
+		{
+			this.cursor += target.length - 1;
+		}
+
+		return haystack === target;
 	}
 }

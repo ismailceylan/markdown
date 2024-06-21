@@ -1,5 +1,4 @@
 import Markdown from "./src/markdown";
-import { EOS } from "./src/constants";
 
 const md = new Markdown(
 {
@@ -13,8 +12,8 @@ const md = new Markdown(
 			},
 			{
 				mode: "eat",
-				until: "**",
-				name: "content"
+				until: [ "**" ],
+				as: "content"
 			}
 		],
 		link:
@@ -25,46 +24,23 @@ const md = new Markdown(
 			},
 			{
 				mode: "eat",
-				until: "]",
-				name: "link-content"
+				until: [ "]" ],
+				as: "link-content"
 			},
 			{
 				mode: "match",
-				with: "("
+				with: "]("
 			},
 			{
 				mode: "eat",
-				until: ")",
-				name: "paranthesis-content",
-				useValue:
-				{
-					"link-and-title":
-					[
-						{
-							mode: "eat",
-							until: " ",
-							name: "link"
-						},
-						{
-							mode: "match",
-							with: " "
-						},
-						{
-							mode: "eat",
-							until: EOS,
-							name: "title"
-						}
-					],
-
-					"only-link":
-					[
-						{
-							mode: "eat",
-							until: EOS,
-							name: "link",
-						}
-					]
-				}
+				until: [ ' "', ")" ],
+				as: "link"
+			},
+			{
+				mode: "eat-if",
+				beforeEndedAs: ' "',
+				until: [ '")' ],
+				as: "title"
 			}
 		]
 	}
@@ -73,8 +49,19 @@ const md = new Markdown(
 console.time("render");
 
 const rendered = md.render(
-`Hello **World**! [How](sasd) are **you** babe?` );
+	`Hello **World**! [How](https://google.com?search=how "look how") are ***you*** my **friend**?`.repeat(859 * 10 )
+);
 
 console.timeEnd("render");
 
 console.log(md);
+
+
+// const stream = new Stream( "naber la bebe" );
+// stream.cursor = 2;
+
+// console.log(
+// 	[stream.readUntil( "l" )],
+// 	stream.cursor
+// );
+

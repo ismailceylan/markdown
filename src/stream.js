@@ -7,7 +7,14 @@ export default class Stream
 	 * 
 	 * @type {number}
 	 */
-	cursor = 0;
+	cursor = -1;
+
+	/**
+	 * The source to be streamed.
+	 * 
+	 * @type {string}
+	 */
+	raw = "";
 
 	constructor( raw )
 	{
@@ -15,7 +22,7 @@ export default class Stream
 	}
 
 	/**
-	 * Indicates the length of the raw string.
+	 * Indicates the length of the stream.
 	 *
 	 * @type {number}
 	 */
@@ -25,7 +32,7 @@ export default class Stream
 	}
 
 	/**
-	 * Indicates the next byte in the stream.
+	 * Indicates the next byte in the stream while moving the cursor.
 	 *
 	 * If the cursor has reached the end of the stream, this will be undefined.
 	 * 
@@ -33,13 +40,13 @@ export default class Stream
 	 */
 	get next()
 	{
-		return this.raw[ this.cursor++ ];
+		return this.raw[ ++this.cursor ];
 	}
 
 	/**
-	 * Indicates the current byte in the stream.
+	 * Indicates the current byte that cursor is pointing in the stream.
 	 * 
-	 * If the cursor has reached the end of the stream, this will be undefined.
+	 * If the cursor has reached at the end of the stream, this will be undefined.
 	 *
 	 * @type {string|undefined}
 	 */
@@ -49,42 +56,31 @@ export default class Stream
 	}
 
 	/**
-	 * Indicates if the cursor has reached the end of the stream.
+	 * Indicates if the cursor has reached at the end of the stream.
 	 *
 	 * @type {boolean}
 	 */
 	get end()
 	{
-		return this.cursor >= this.length;
+		return this.cursor >= this.length - 1;
+	}
+
+	get look()
+	{
+		return new LookAround( this );
 	}
 
 	readUntil( target )
 	{
-		const stack = this.raw.slice( this.cursor );
-		const to = stack.indexOf( target );
+		const haystack = this.raw.slice( this.cursor );
+		const targetPos = haystack.indexOf( target );
 
-		if( to > -1 )
+		if ( targetPos > -1 )
 		{
-			const data = stack.slice( 0, to );
-			
-			this.cursor += data.length;
-			return data;
+			this.cursor += targetPos - 1;
+			return haystack.slice( 0, targetPos );
 		}
-	}
 
-	positiveLookAhead( target )
-	{
-		return ( new LookAround( this )).positiveLookAhead( target );
+		return false;
 	}
-	
-	negativeLookAhead( target )
-	{
-		return ( new LookAround( this )).negativeLookAhead( target );
-	}
-		
-	negativeLookBehind( target )
-	{
-		return ( new LookAround( this )).negativeLookBehind( target );
-	}
-	
 }
